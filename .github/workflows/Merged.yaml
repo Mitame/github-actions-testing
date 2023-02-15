@@ -47,6 +47,6 @@ jobs:
             })
       - name: Trigger workflow
         env:
-          GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh workflow run "Deploy" --ref 'refs/tags/v${{ steps.create_version.outputs.version }}'
