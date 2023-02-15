@@ -1,8 +1,10 @@
 name: Deploy
 on:
   push:
+    branches:
+      - main
     tags:
-      - "v*"
+      - v*
 jobs:
   Deploy:
     runs-on: ubuntu-latest
