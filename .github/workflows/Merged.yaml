@@ -1,0 +1,47 @@
+name: Deploy to Production
+on:
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+jobs:
+  Package:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Generate semver
+        uses: paulhatch/semantic-version@v4.0.2
+        id: create_version
+        with:
+          tag_prefix: v
+          major_pattern: '(MAJOR)'
+          minor_pattern: '(MINOR)'
+          format: '${major}.${minor}.${patch}'
+          short_tags: false
+          bump_each_commit: false
+
+      - name: Get existing tags
+        id: tagcheck
+        shell: bash
+        run: |
+          currentVersion=${{steps.create_version.outputs.version}}
+          tagCount=$(git tag --points-at | grep -c "^v${currentVersion}$" || true)
+          previouslyTagged=$(git tag -l ${currentVersion} | grep -c "^${currentVersion}$" || true)
+          if [[ $previouslyTagged -ge 1 && $tagCount -eq 0 ]]; then echo "${currentVersion} already released!" && exit 4; fi
+          echo "Tag count $tagCount"
+          echo "TAGSET=$tagCount" > $GITHUB_OUTPUT
+      - name: Create tag
+        if: ${{needs.Package.outputs.TagSet == '0' }}
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/v${{ steps.create_version.outputs.version }}',
+              sha: '${{ github.event.pull_request.merge_commit_sha }}'
+            })
