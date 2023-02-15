@@ -9,9 +9,9 @@ jobs:
     environment:
       name: prod
     steps:
-      - run: "echo We're in ${{vars.ENVIRONMENT_NAME}}"
+      - run: "echo We\'re in ${{vars.ENVIRONMENT_NAME}}"
 
   Deploy_not:
     runs-on: ubuntu-latest
     steps:
-      - run: "echo We're not in an environment"
+      - run: "echo We\'re not in an environment"
