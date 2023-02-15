@@ -38,7 +38,6 @@ jobs:
         if: ${{needs.Package.outputs.TagSet == '0' }}
         uses: actions/github-script@v5
         with:
-          github-token: ${{ secrets.PAT_FOR_GITHUB }}
           script: |
             github.rest.git.createRef({
               owner: context.repo.owner,
@@ -46,3 +45,6 @@ jobs:
               ref: 'refs/tags/v${{ steps.create_version.outputs.version }}',
               sha: '${{ github.event.pull_request.merge_commit_sha }}'
             })
+      - name: Trigger workflow
+        run: |
+          gh workflow run "Deploy" --ref 'refs/tags/v${{ steps.create_version.outputs.version }}'
