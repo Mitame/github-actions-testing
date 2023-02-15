@@ -11,4 +11,4 @@ jobs:
     environment:
       name: prod
     steps:
-      - run: "We're in ${vars.ENVIRONMENT_NAME}"
+      - run: "echo We're in ${{vars.ENVIRONMENT_NAME}}"
