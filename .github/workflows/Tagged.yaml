@@ -2,7 +2,7 @@ name: Deploy
 on:
   push:
     tags:
-      - v0.*
+      - '*'
 jobs:
   Deploy_prod:
     runs-on: ubuntu-latest
@@ -14,4 +14,4 @@ jobs:
   Deploy_not:
     runs-on: ubuntu-latest
     steps:
-      - run: "echo W're not in an environment"
+      - run: "echo We're not in an environment"
