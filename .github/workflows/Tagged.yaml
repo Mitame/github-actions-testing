@@ -1,14 +1,17 @@
 name: Deploy
 on:
   push:
-    branches:
-      - main
     tags:
-      - v*
+      - v0.*
 jobs:
-  Deploy:
+  Deploy_prod:
     runs-on: ubuntu-latest
     environment:
       name: prod
     steps:
       - run: "echo We're in ${{vars.ENVIRONMENT_NAME}}"
+
+  Deploy_not:
+    runs-on: ubuntu-latest
+    steps:
+      - run: "echo W're not in an environment"
