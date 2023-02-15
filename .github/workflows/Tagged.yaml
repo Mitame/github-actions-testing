@@ -1,0 +1,12 @@
+name: Deploy to Production
+on:
+  push:
+    tags:
+      - "v*"
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: prod
+    steps:
+      - run: "We're in ${vars.ENVIRONMENT_NAME}"
